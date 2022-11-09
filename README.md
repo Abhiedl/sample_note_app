@@ -1,6 +1,6 @@
 # note_app
 
-A new Flutter project.
+A simple Flutter application to create, store, update and delete notes using Node.js and LocalHost for the DB.
 
 ## Getting Started
 
