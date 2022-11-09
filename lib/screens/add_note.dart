@@ -117,7 +117,11 @@ class AddNoteScreen extends StatelessWidget {
       title: title,
       content: content,
     );
-    NoteDB.instance.updateNote(editedNote);
-    Navigator.of(scaffoldkey.currentContext!).pop();
+    final note = await NoteDB.instance.updateNote(editedNote);
+    if (note == null) {
+      print('Unable to update note');
+    } else {
+      Navigator.of(scaffoldkey.currentContext!).pop();
+    }
   }
 }

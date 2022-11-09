@@ -43,29 +43,33 @@ class NoteDB extends ApiCalls {
         url.baseUrl + url.createNote,
         data: value.toJson(),
       );
-      print(result.data);
       final resultAsJson = jsonDecode(result.toString());
       return NoteModel.fromJson(resultAsJson as Map<String, dynamic>);
     } on DioError catch (e) {
-      print(e.response?.data);
-      print(e);
       return null;
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }
 
   @override
   Future<void> deleteNote(String id) async {
-    // TODO: implement deleteNote
-    throw UnimplementedError();
+    final result =
+        await dio.delete(url.baseUrl + url.deleteNote.replaceFirst('{id}', id));
+    if (result.data == null) {
+      return;
+    }
+    final index = noteListNotifier.value.indexWhere((note) => note.id == id);
+    if (index == -1) {
+      return;
+    }
+    noteListNotifier.value.removeAt(index);
+    noteListNotifier.notifyListeners();
   }
 
   @override
   Future<List<NoteModel>> getAllNotes() async {
     final result = await dio.get(url.baseUrl + url.getAllNotes);
-    print(result.data.toString());
     final resultAsJson = jsonDecode(result.toString());
     if (resultAsJson != null) {
       final getNoteResp = GetAllNotesResp.fromJson(resultAsJson);
@@ -103,6 +107,7 @@ class NoteDB extends ApiCalls {
 
     noteListNotifier.value.insert(index, value);
     noteListNotifier.notifyListeners();
+    return value;
   }
 
   NoteModel? getNoteById(String id) {

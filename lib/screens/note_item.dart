@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:note_app/data/data.dart';
 import 'package:note_app/screens/add_note.dart';
 
 class NoteItem extends StatelessWidget {
@@ -50,7 +51,9 @@ class NoteItem extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        NoteDB.instance.deleteNote(id);
+                      },
                       icon: const Icon(
                         Icons.delete,
                         color: Color.fromARGB(255, 255, 17, 0),

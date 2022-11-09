@@ -20,6 +20,11 @@ class HomeScreen extends StatelessWidget {
         child: ValueListenableBuilder(
           valueListenable: NoteDB.instance.noteListNotifier,
           builder: (context, List<NoteModel> newNotes, _) {
+            if (newNotes.isEmpty) {
+              return const Center(
+                child: Text('Your notepad is empty.'),
+              );
+            }
             return GridView.count(
               crossAxisCount: 2,
               mainAxisSpacing: 10,
