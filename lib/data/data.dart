@@ -81,7 +81,35 @@ class NoteDB extends ApiCalls {
 
   @override
   Future<NoteModel?> updateNote(NoteModel value) async {
-    // TODO: implement updateNote
-    throw UnimplementedError();
+    final result =
+        await dio.put(url.baseUrl + url.updateNote, data: value.toJson());
+    if (result == null) {
+      return null;
+    }
+
+    //find index
+
+    final index =
+        noteListNotifier.value.indexWhere((note) => note.id == value.id);
+    if (index == -1) {
+      return null;
+    }
+
+    // remove from index
+
+    noteListNotifier.value.removeAt(index);
+
+    // add updatednote to that index
+
+    noteListNotifier.value.insert(index, value);
+    noteListNotifier.notifyListeners();
+  }
+
+  NoteModel? getNoteById(String id) {
+    try {
+      return noteListNotifier.value.firstWhere((note) => note.id == id);
+    } catch (_) {
+      return null;
+    }
   }
 }
